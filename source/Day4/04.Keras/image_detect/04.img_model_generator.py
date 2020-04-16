@@ -117,17 +117,51 @@ def main():
 
     # 모델 정의
     model = Sequential()
-    # TO-DO
+    # Input + CNN-1
+    model.add(Conv2D(
+        input_shape=(64, 64, 3),
+        filters=32,
+        kernel_size=(3, 3),
+        strides=(1, 1),
+        padding="same",
+        activation="sigmoid"
+    ))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    # CNN-2
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="sigmoid"
+    ))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Dropout(0.01))
+    # CNN-3
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="sigmoid"
+    ))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Dropout(0.05))
+
+    # Flatten + Dense
+    model.add(Flatten())     
+    model.add(Dense(512, activation='sigmoid'))
+    model.add(Dense(128, activation='sigmoid'))
+    model.add(Dense(num_classes, activation='softmax'))
 
     model.summary()
 
+    # Compile
+    model.compile(optimizer='adam',
+                    loss='categorical_crossentropy',
+                    metrics=['accuracy'])
+                    
     # 모델 시각화
+    plot_file_path = os.path.join(OUTPUT_MODEL_DIR, OUTPUT_PLOT_FILE)
+    plot_model(model, 
+                to_file=plot_file_path,
+                show_shapes=True)
 
     # 학습
     
     # 모델 저장
-    model_file_path = os.path.join(OUTPUT_MODEL_DIR, OUTPUT_MODEL_FILE)
-    model.save(model_file_path)
+    # model_file_path = os.path.join(OUTPUT_MODEL_DIR, OUTPUT_MODEL_FILE)
+    # model.save(model_file_path)
 
     return RETURN_SUCCESS
 
